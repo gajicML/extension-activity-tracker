@@ -2,7 +2,7 @@
   "name": "Activity tracker",
   "version": "1.0",
   "description": "Track user activity",
-  "permissions": ["declarativeContent", "storage"],
+  "permissions": ["activeTab", "declarativeContent", "storage"],
   "background": {
     "scripts": ["background.js"],
     "persistent": false
