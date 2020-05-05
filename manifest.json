@@ -1,0 +1,11 @@
+{
+  "name": "Activity tracker",
+  "version": "1.0",
+  "description": "Track user activity",
+  "permissions": ["storage"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "manifest_version": 2
+}
