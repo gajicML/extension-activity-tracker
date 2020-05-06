@@ -38,7 +38,9 @@ function processTabChange(isWindowActive) {
 
       try {
         let urlObject = new URL(url);
-        hostName = urlObject.hostname;
+        urlObject.protocol === "file:"
+          ? (hostName = urlObject.origin)
+          : (hostName = urlObject.hostname);
       } catch (error) {
         console.log(
           `Could not construct url from ${currentTab.url}, error:${error}`

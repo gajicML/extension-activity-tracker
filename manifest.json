@@ -23,5 +23,6 @@
     "48": "images/clock48.png",
     "128": "images/clock128.png"
   },
+  "content_security_policy": "script-src 'self' https://cdn.jsdelivr.net/npm/chart.js@2.8.0; object-src 'self'",
   "manifest_version": 2
 }
