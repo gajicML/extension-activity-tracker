@@ -6,7 +6,9 @@ const timeTable = document.getElementById("timeTable");
 
 clearTimesButton.onclick = (elem) => {
   chrome.storage.local.set({ tabTimesObject: "{}" });
-  clearRows();
+  if (confirm("Are you sure you want to clear tracking history???")) {
+    clearRows();
+  }
 };
 
 chrome.storage.local.get("tabTimesObject", (dataCont) => {
@@ -30,6 +32,11 @@ chrome.storage.local.get("tabTimesObject", (dataCont) => {
     sortEntries(entries);
 
     entries.map(displayData);
+
+    let headerRow = timeTable.insertRow(0);
+    headerRow.insertCell(0).innerHTML = "Url";
+    headerRow.insertCell(1).innerHTML = "Total time";
+    headerRow.insertCell(2).innerHTML = "Last Visit";
   } catch (err) {
     const message = `loading the tabTimesObject went wrong ${err.toString()}`;
     console.error(message);
@@ -62,23 +69,42 @@ const sortEntries = (entries) => {
 };
 
 const displayData = (urlObject) => {
-  // console.log(urlObject);
+  console.log("urlObject", urlObject);
+
   let newRow = timeTable.insertRow(0),
     cellHostName = newRow.insertCell(0),
-    cellTimeMinutes = newRow.insertCell(1),
-    cellTime = newRow.insertCell(2),
-    cellLastDate = newRow.insertCell(3);
+    cellTime = newRow.insertCell(1),
+    cellLastDate = newRow.insertCell(2);
 
   cellHostName.innerHTML = urlObject["url"];
 
   let time_ =
     urlObject["trackedSeconds"] != null ? urlObject["trackedSeconds"] : 0;
-  cellTime.innerHTML = Math.round(time_);
-
-  cellTimeMinutes.innerHTML = (time_ / 60).toFixed(2);
+  cellTime.innerHTML = formatTime(time_);
 
   let date = new Date();
   date.setTime(urlObject["lastDateVal"] != null ? urlObject["lastDateVal"] : 0);
 
-  cellLastDate.innerHTML = date.toUTCString();
+  cellLastDate.innerHTML = date.toLocaleString("sr-Latn-RS");
 };
+
+const formatTime = (time) => {
+  let hours = Math.floor(time / 3600);
+  time -= hours * 3600;
+
+  let minutes = Math.floor(time / 60);
+  time -= minutes * 60;
+
+  let seconds = parseInt(time % 60, 10);
+
+  return (
+    (hours === 0 || hours < 10 ? "0" + hours : hours) +
+    "h " +
+    (minutes < 10 ? "0" + minutes : minutes) +
+    "m " +
+    (seconds < 10 ? "0" + seconds : seconds) +
+    "s"
+  );
+};
+
+const getUrlsAndPercenatage = () => {};
