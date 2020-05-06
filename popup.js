@@ -62,7 +62,7 @@ const sortEntries = (entries) => {
 };
 
 const displayData = (urlObject) => {
-  console.log(urlObject);
+  // console.log(urlObject);
   let newRow = timeTable.insertRow(0),
     cellHostName = newRow.insertCell(0),
     cellTimeMinutes = newRow.insertCell(1),
