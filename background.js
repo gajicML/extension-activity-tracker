@@ -98,11 +98,14 @@ function processTabChange(isWindowActive) {
           let currentDateValue = Date.now();
 
           let lastTabInfo = { url: hostName, lastDateVal: currentDateValue };
+
+          // check if Chrome is in focus
           if (!isWindowActive) lastTabInfo = {};
 
           let newLastTabObject = {};
           // update
           newLastTabObject[lastActiveTabKey] = JSON.stringify(lastTabInfo);
+          console.log("newLastTabObject: ", newLastTabObject);
 
           // set newLastTabObject
           chrome.storage.local.set(newLastTabObject, () => {
@@ -112,7 +115,9 @@ function processTabChange(isWindowActive) {
             newTabTimesObject[tabTimeObjectKey] = tabTimesObjectString;
 
             // set newTabTimesObject
-            chrome.storage.local.set(newTabTimesObject, () => {});
+            chrome.storage.local.set(newTabTimesObject, () => {
+              console.log("------------------------------");
+            });
           });
         }
       );

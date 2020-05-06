@@ -3,14 +3,34 @@
   <head>
     <style>
       button {
-        height: 30px;
-        width: 30px;
+        height: 40px;
+        width: 100px;
         outline: none;
+      }
+
+      #timeTable {
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      body {
+        width: 400px;
       }
     </style>
   </head>
   <body>
-    <button id="changeColor"></button>
+    <button id="btnClearTimes">Clear Times</button>
+
+    <div id="timeTableDiv">
+      <table id="timeTable"></table>
+    </div>
+
+    <div id="errorMessage"></div>
+
+    <!-- <button id="btnShowTable">Load Times</button> -->
+
     <script src="popup.js"></script>
   </body>
 </html>

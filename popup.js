@@ -1,15 +1,13 @@
-let changeColor = document.getElementById("changeColor");
+const showTableButton = document.getElementById("btnShowTable");
+const clearTimesButton = document.getElementById("btnClearTimes");
 
-chrome.storage.sync.get("color", function (data) {
-  changeColor.style.backgroundColor = data.color;
-  changeColor.setAttribute("value", data.color);
-});
+const errorMessageElement = document.getElementById("errorMessage");
+const timeTable = document.getElementById("timeTable");
 
-changeColor.onclick = function (element) {
-  let color = element.target.value;
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.tabs.executeScript(tabs[0].id, {
-      code: 'document.body.style.backgroundColor = "' + color + '";',
-    });
-  });
+clearTimesButton.onclick = (elem) => {
+  chrome.storage.local.set({ tabTimesObject: "{}" }, () => {});
 };
+
+chrome.storage.local.get("tabTimesObject", (dataCont) => {
+  console.log("dataCont", dataCont);
+});
