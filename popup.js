@@ -12,8 +12,6 @@ clearTimesButton.onclick = (elem) => {
 };
 
 chrome.storage.local.get("tabTimesObject", (dataCont) => {
-  console.log("dataCont", dataCont);
-
   let DataString = dataCont["tabTimesObject"];
   if (DataString === null) return;
 
@@ -30,6 +28,12 @@ chrome.storage.local.get("tabTimesObject", (dataCont) => {
     }
 
     sortEntries(entries);
+    console.log(entries);
+
+    // trigger chart
+    if (typeof showPieChart === "function") {
+      showPieChart(entries);
+    }
 
     entries.map(displayData);
 
@@ -69,8 +73,6 @@ const sortEntries = (entries) => {
 };
 
 const displayData = (urlObject) => {
-  console.log("urlObject", urlObject);
-
   let newRow = timeTable.insertRow(0),
     cellHostName = newRow.insertCell(0),
     cellTime = newRow.insertCell(1),
@@ -106,5 +108,3 @@ const formatTime = (time) => {
     "s"
   );
 };
-
-const getUrlsAndPercenatage = () => {};

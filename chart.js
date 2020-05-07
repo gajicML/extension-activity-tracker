@@ -14,52 +14,92 @@ const randomColor = () => {
   );
 };
 
+const getUrlsAndPercenatage = (data) => {
+  let visitedUrls = {};
+  let finalObj = {};
+
+  for (const obj of data) {
+    const myNewKey = Object.values(obj)[0];
+    const myNewValue = Object.values(obj)[1];
+    visitedUrls[myNewKey] = myNewValue;
+  }
+
+  let sum = Object.keys(visitedUrls).reduce((s, k) => (s += visitedUrls[k]), 0);
+
+  let result = Object.keys(visitedUrls).map((k) => ({
+    [k]: ((visitedUrls[k] / sum) * 100).toFixed(2),
+  }));
+
+  for (const obj of result) {
+    const myNewKey = Object.keys(obj);
+    const myNewValue = Object.values(obj);
+    finalObj[myNewKey] = myNewValue[0];
+  }
+
+  return finalObj;
+};
+
 // Pie chart
 let myChart = document.getElementById("myChart").getContext("2d");
 
 // Global options
 Chart.defaults.global.defaultFontFamily = "Montserrat";
 
-let visitedUrls = {
-  "youtube.com": 35,
-  "google.com": 30,
-  "chartjs.com": 25,
-  "worldometer.com": 10,
-};
+const showPieChart = (data) => {
+  console.log("data Chart", data);
 
-// get labels
-const keys = Object.keys(visitedUrls);
-console.log(keys);
+  let visitedUrls = getUrlsAndPercenatage(data);
 
-// get values
-const values = Object.values(visitedUrls);
-console.log(values);
+  // get labels
+  const keys = Object.keys(visitedUrls);
+  // console.log(keys);
 
-// get defined colors
-const colors = Object.values(window.chartColors);
+  // get values
+  const values = Object.values(visitedUrls);
+  // console.log(values);
 
-// set colors
-let bgColors = [];
-for (let i = 0; i < values.length; i++) {
-  if (i <= colors.length) {
-    bgColors.push(colors[i]);
-    console.log[colors[i]];
-  } else {
-    bgColors.push(randomColor());
+  // get defined colors
+  const colors = Object.values(window.chartColors);
+
+  // set colors
+  let bgColors = [];
+  for (let i = 0; i < values.length; i++) {
+    if (i <= colors.length) {
+      bgColors.push(colors[i]);
+      console.log[colors[i]];
+    } else {
+      bgColors.push(randomColor());
+    }
   }
-}
 
-let pieChart = new Chart("myChart", {
-  type: "pie",
-  data: {
-    labels: keys,
-    datasets: [
-      {
-        label: "Visited",
-        data: values,
-        backgroundColor: bgColors,
+  return new Chart("myChart", {
+    type: "pie",
+    data: {
+      labels: keys,
+      datasets: [
+        {
+          data: values,
+          backgroundColor: bgColors,
+        },
+      ],
+    },
+    options: {
+      legend: {
+        display: false,
+        position: "left",
       },
-    ],
-  },
-  options: { responsive: true },
-});
+      tooltips: {
+        callbacks: {
+          label: function (tooltipItem, data) {
+            return (
+              data["labels"][tooltipItem["index"]] +
+              ": " +
+              data["datasets"][0]["data"][tooltipItem["index"]] +
+              "%"
+            );
+          },
+        },
+      },
+    },
+  });
+};
