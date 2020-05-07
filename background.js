@@ -32,21 +32,22 @@ function processTabChange(isWindowActive) {
     // check if first active tab exist
     if (tabs.length > 0 && tabs[0] !== null) {
       let currentTab = tabs[0];
-      let url = currentTab.url;
-      let title = currentTab.title;
+
+      let url =
+        currentTab.status === "loading"
+          ? currentTab.pendingUrl
+          : currentTab.url;
+
       let hostName = url;
       console.log(currentTab);
 
       try {
-        if (currentTab.status === "loading") {
-          console.log("Page is loading");
-        } else {
-          let urlObject = new URL(url);
+        let urlObject = new URL(url);
+        // console.log(urlObject);
 
-          urlObject.protocol === "file:"
-            ? (hostName = urlObject.origin)
-            : (hostName = urlObject.hostname);
-        }
+        urlObject.protocol === "file:"
+          ? (hostName = urlObject.origin)
+          : (hostName = urlObject.hostname);
       } catch (error) {
         console.log(
           `Could not construct url from ${currentTab.url}, error:${error}`
