@@ -12,13 +12,18 @@
         width: 500px;
       }
       button {
-        height: 25px;
         width: 100px;
         outline: none;
       }
 
       #timeTable {
         width: 100%;
+        margin-top: 10px;
+        font-size: 12px;
+        color: #3a3a3a;
+      }
+      #timeTable td {
+        padding: 2px;
       }
 
       tr:nth-child(even) {
@@ -27,10 +32,33 @@
       .clear {
         clear: both;
       }
+
+      .header {
+        font-weight: bold;
+      }
+
+      #btnClearTimes {
+        font-family: "Montserrat", Arial, Helvetica, sans-serif;
+        background: #d40000;
+        color: #efefef;
+        border: 2px solid #c10000;
+        padding: 5px;
+        border-radius: 3px;
+        box-shadow: 0px 1px 6px -1px #525252;
+        font-size: 11px;
+        width: 80px;
+        cursor: pointer;
+        float: right;
+      }
+
+      #btnClearTimes:hover {
+        background: #790000;
+        color: #fff;
+      }
     </style>
   </head>
   <body>
-    <button id="btnClearTimes">Clear Times</button>
+    <button id="btnClearTimes">Clear Data</button>
     <div class="clear"></div>
     <canvas id="myChart"></canvas>
 
