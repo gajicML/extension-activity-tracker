@@ -96,8 +96,6 @@ const showPieChart = (data) => {
         bodyFontSize: 20,
         callbacks: {
           label: function (tooltipItem, data) {
-            console.log("data", data);
-            console.log("tooltipItem", tooltipItem);
             return (
               data["labels"][tooltipItem["index"]] +
               ": " +

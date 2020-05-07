@@ -35,12 +35,18 @@ function processTabChange(isWindowActive) {
       let url = currentTab.url;
       let title = currentTab.title;
       let hostName = url;
+      console.log(currentTab);
 
       try {
-        let urlObject = new URL(url);
-        urlObject.protocol === "file:"
-          ? (hostName = urlObject.origin)
-          : (hostName = urlObject.hostname);
+        if (currentTab.status === "loading") {
+          console.log("Page is loading");
+        } else {
+          let urlObject = new URL(url);
+
+          urlObject.protocol === "file:"
+            ? (hostName = urlObject.origin)
+            : (hostName = urlObject.hostname);
+        }
       } catch (error) {
         console.log(
           `Could not construct url from ${currentTab.url}, error:${error}`
@@ -50,7 +56,7 @@ function processTabChange(isWindowActive) {
       chrome.storage.local.get(
         [tabTimeObjectKey, lastActiveTabKey],
         (result) => {
-          console.log("result", result);
+          // console.log("result", result);
 
           // get JSON obj from storage
           let lastActiveTabString = result[lastActiveTabKey];
@@ -62,7 +68,7 @@ function processTabChange(isWindowActive) {
           let lastActiveTab =
             lastActiveTabString != null ? JSON.parse(lastActiveTabString) : {};
 
-          console.log("lastActiveTab", lastActiveTab);
+          // console.log("lastActiveTab", lastActiveTab);
 
           // calculate passed time
           if (
@@ -107,11 +113,11 @@ function processTabChange(isWindowActive) {
           let newLastTabObject = {};
           // update
           newLastTabObject[lastActiveTabKey] = JSON.stringify(lastTabInfo);
-          console.log("newLastTabObject: ", newLastTabObject);
+          // console.log("newLastTabObject: ", newLastTabObject);
 
           // set newLastTabObject
           chrome.storage.local.set(newLastTabObject, () => {
-            console.log("lastActiveTab stored: " + hostName);
+            // console.log("lastActiveTab stored: " + hostName);
             const tabTimesObjectString = JSON.stringify(tabTimeObject);
             let newTabTimesObject = {};
             newTabTimesObject[tabTimeObjectKey] = tabTimesObjectString;

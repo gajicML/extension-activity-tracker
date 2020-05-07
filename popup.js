@@ -4,10 +4,14 @@ const clearTimesButton = document.getElementById("btnClearTimes");
 const errorMessageElement = document.getElementById("errorMessage");
 const timeTable = document.getElementById("timeTable");
 
+let canvasChart = document.getElementById("myChart");
+canvasChart.style.display = "block";
+
 clearTimesButton.onclick = (elem) => {
   chrome.storage.local.set({ tabTimesObject: "{}" });
   if (confirm("Are you sure you want to clear tracking history???")) {
     clearRows();
+    canvasChart.style.display = "none";
   }
 };
 
