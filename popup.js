@@ -11,44 +11,45 @@ clearTimesButton.onclick = (elem) => {
   }
 };
 
-chrome.storage.local.get("tabTimesObject", (dataCont) => {
-  let DataString = dataCont["tabTimesObject"];
-  if (DataString === null) return;
+const getData = () => {
+  chrome.storage.local.get("tabTimesObject", (dataCont) => {
+    let DataString = dataCont["tabTimesObject"];
+    if (DataString === null) return;
 
-  try {
-    const data = JSON.parse(DataString);
+    try {
+      const data = JSON.parse(DataString);
 
-    clearRows();
+      clearRows();
 
-    let entries = [];
-    for (let key in data) {
-      if (data.hasOwnProperty(key)) {
-        entries.push(data[key]);
+      let entries = [];
+      for (let key in data) {
+        if (data.hasOwnProperty(key)) {
+          entries.push(data[key]);
+        }
       }
+
+      sortEntries(entries);
+      console.log(entries);
+
+      entries.map(displayData);
+
+      let headerRow = timeTable.insertRow(0);
+      headerRow.classList.add("header");
+
+      headerRow.insertCell(0).innerHTML = "Url";
+      headerRow.insertCell(1).innerHTML = "Total time";
+      headerRow.insertCell(2).innerHTML = "%";
+      headerRow.insertCell(3).innerHTML = "Last Visit";
+      //
+    } catch (err) {
+      const message = `loading the tabTimesObject went wrong ${err.toString()}`;
+      console.error(message);
+
+      errorMessageElement.innerText = message;
+      errorMessageElement.innerText = DataString;
     }
-
-    sortEntries(entries);
-    console.log(entries);
-
-    // trigger chart
-    if (typeof showPieChart === "function") {
-      showPieChart(entries);
-    }
-
-    entries.map(displayData);
-
-    let headerRow = timeTable.insertRow(0);
-    headerRow.insertCell(0).innerHTML = "Url";
-    headerRow.insertCell(1).innerHTML = "Total time";
-    headerRow.insertCell(2).innerHTML = "Last Visit";
-  } catch (err) {
-    const message = `loading the tabTimesObject went wrong ${err.toString()}`;
-    console.error(message);
-
-    errorMessageElement.innerText = message;
-    errorMessageElement.innerText = DataString;
-  }
-});
+  });
+};
 
 const clearRows = () => {
   const rowCount = timeTable.rows.length;
@@ -72,11 +73,17 @@ const sortEntries = (entries) => {
   });
 };
 
-const displayData = (urlObject) => {
+const displayData = (urlObject, i, currentArray) => {
+  let sumSecondsArray = currentArray.map((a) => a["trackedSeconds"]);
+  let totalSeconds = sumSecondsArray.reduce((a, b) => a + b);
+  let percentage =
+    ((urlObject["trackedSeconds"] / totalSeconds) * 100).toFixed(2) + "%";
+
   let newRow = timeTable.insertRow(0),
     cellHostName = newRow.insertCell(0),
     cellTime = newRow.insertCell(1),
-    cellLastDate = newRow.insertCell(2);
+    cellPerc = newRow.insertCell(2),
+    cellLastDate = newRow.insertCell(3);
 
   cellHostName.innerHTML = urlObject["url"];
 
@@ -84,10 +91,20 @@ const displayData = (urlObject) => {
     urlObject["trackedSeconds"] != null ? urlObject["trackedSeconds"] : 0;
   cellTime.innerHTML = formatTime(time_);
 
+  cellPerc.innerHTML = percentage;
+
   let date = new Date();
   date.setTime(urlObject["lastDateVal"] != null ? urlObject["lastDateVal"] : 0);
 
   cellLastDate.innerHTML = date.toLocaleString("sr-Latn-RS");
+
+  // trigger chart
+  // if (typeof showPieChart === "function") {}
+  try {
+    showPieChart(currentArray);
+  } catch (error) {
+    console.log(console.error(error));
+  }
 };
 
 const formatTime = (time) => {
