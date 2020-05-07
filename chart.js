@@ -1,11 +1,10 @@
-window.chartColors = {
-  red: "rgb(255, 99, 132)",
+const chartColors = {
   orange: "rgb(255, 159, 64)",
-  blue: "rgb(54, 162, 235)",
   purple: "rgb(153, 102, 255)",
-  green: "rgb(75, 192, 192)",
   yellow: "rgb(255, 205, 86)",
-  grey: "rgb(201, 203, 207)",
+  green: "rgb(75, 192, 192)",
+  red: "rgb(255, 99, 132)",
+  blue: "rgb(54, 162, 235)",
 };
 
 const randomColor = () => {
@@ -46,7 +45,7 @@ let myChart = document.getElementById("myChart").getContext("2d");
 Chart.defaults.global.defaultFontFamily = "Montserrat";
 
 const showPieChart = (data) => {
-  console.log("data Chart", data);
+  // console.log("data Chart", data);
 
   let visitedUrls = getUrlsAndPercenatage(data);
 
@@ -59,21 +58,26 @@ const showPieChart = (data) => {
   // console.log(values);
 
   // get defined colors
-  const colors = Object.values(window.chartColors);
+  const colors = Object.values(chartColors);
 
   // set colors
   let bgColors = [];
   for (let i = 0; i < values.length; i++) {
-    if (i <= colors.length) {
+    if (values.length <= colors.length) {
       bgColors.push(colors[i]);
-      console.log[colors[i]];
     } else {
-      bgColors.push(randomColor());
+      if (i < colors.length) {
+        bgColors.push(colors[i]);
+      } else {
+        bgColors.unshift(randomColor());
+      }
     }
   }
 
+  // console.log("bgColors", bgColors);
+
   return new Chart("myChart", {
-    type: "pie",
+    type: "doughnut", // pie, doughnut
     data: {
       labels: keys,
       datasets: [
@@ -84,13 +88,16 @@ const showPieChart = (data) => {
       ],
     },
     options: {
+      cutoutPercentage: 5,
       legend: {
         display: false,
-        position: "left",
       },
       tooltips: {
+        bodyFontSize: 20,
         callbacks: {
           label: function (tooltipItem, data) {
+            console.log("data", data);
+            console.log("tooltipItem", tooltipItem);
             return (
               data["labels"][tooltipItem["index"]] +
               ": " +
@@ -103,3 +110,5 @@ const showPieChart = (data) => {
     },
   });
 };
+
+getData();
